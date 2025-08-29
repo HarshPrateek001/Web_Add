@@ -1,0 +1,512 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Public Notice Ads Clone</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            overflow-x: hidden; /* Prevent horizontal scrolling */
+        }
+        .gradient-blue {
+            background: linear-gradient(to right, #0a4f9a, #1a71c8);
+        }
+        .gradient-dark-blue {
+            background: linear-gradient(to right, #073a72, #0d5a9c);
+        }
+        .text-gradient {
+            background: linear-gradient(to right, #0a4f9a, #1a71c8);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        .hero-background {
+            background-image: url('https://placehold.co/1920x400/F0F4F8/333333?text=Background+Image'); /* Placeholder for hero image */
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
+        }
+        /* Custom styles for green buttons */
+        .green-button {
+            background-color: #4CAF50; /* A shade of green */
+            color: white;
+            padding: 10px 20px;
+            border-radius: 8px;
+            font-weight: bold;
+            transition: background-color 0.3s ease, transform 0.3s ease; /* Added transform for animation */
+        }
+        .green-button:hover {
+            background-color: #45a049;
+            transform: scale(1.05); /* Zoom-in effect */
+        }
+        /* Custom styles for outline buttons */
+        .outline-button {
+            border: 2px solid #3B82F6; /* Blue border */
+            color: #3B82F6;
+            background-color: transparent;
+            padding: 8px 20px;
+            border-radius: 8px;
+            font-weight: 600;
+            transition: all 0.3s ease; /* All for smoother transition */
+        }
+        .outline-button:hover {
+            background-color: #3B82F6;
+            color: white;
+            transform: scale(1.05); /* Zoom-in effect */
+        }
+        /* General button animation for other buttons */
+        .animated-button {
+            transition: transform 0.3s ease;
+        }
+        .animated-button:hover {
+            transform: scale(1.05);
+        }
+
+        /* WhatsApp Button specific styles */
+        .whatsapp-button {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            background-color: #25D366;
+            color: white;
+            border-radius: 50%;
+            width: 60px;
+            height: 60px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+            font-size: 30px;
+            z-index: 1000;
+            transition: transform 0.3s ease, background-color 0.3s ease;
+        }
+        .whatsapp-button:hover {
+            background-color: #1DA851;
+            transform: scale(1.1);
+        }
+
+        /* Responsive adjustments for smaller screens */
+        @media (max-width: 768px) {
+            .navbar-links {
+                display: none; /* Hide navigation links by default on small screens */
+                flex-direction: column;
+                width: 100%;
+                background-color: white;
+                position: absolute;
+                top: 64px; /* Adjust based on header height */
+                left: 0;
+                /* Reduced padding for a smaller visual footprint */
+                padding: 0.5rem 0; /* Changed from 1rem 0 */
+                box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
+                z-index: 999;
+            }
+            .navbar-links.active {
+                display: flex; /* Show when active */
+            }
+            .navbar-links li {
+                width: 100%;
+                text-align: center;
+                /* Reduced padding for individual items */
+                padding: 0.25rem 0; /* Changed from 0.5rem 0 */
+            }
+            .navbar-links a {
+                display: block;
+                padding: 0.5rem 0;
+            }
+            .navbar-toggle {
+                display: block; /* Show hamburger icon */
+            }
+            .lg\:w-1\/3 {
+                width: 100%; /* Make hero sections stack on small screens */
+            }
+            .lg\:text-left {
+                text-align: center;
+            }
+            .lg\:mx-0 {
+                margin-left: auto;
+                margin-right: auto;
+            }
+            .hero-section-padding {
+                padding-top: 2rem;
+                padding-bottom: 2rem;
+            }
+            /* Dropdowns in mobile menu should stack */
+            .navbar-links .dropdown-menu {
+                position: static;
+                width: 100%;
+                box-shadow: none;
+                background-color: #f3f4f6; /* Lighter background for nested menu */
+            }
+            .navbar-links .dropdown-menu a {
+                padding-left: 2rem; /* Indent dropdown items */
+            }
+        }
+        @media (min-width: 769px) {
+            .navbar-toggle {
+                display: none; /* Hide hamburger icon on larger screens */
+            }
+            .navbar-links {
+                display: flex; /* Always show links on larger screens */
+            }
+        }
+    </style>
+</head>
+<body class="bg-gray-100">
+
+    <!-- Header Section -->
+    <header class="bg-white shadow-md py-4">
+        <div class="container mx-auto px-4 flex justify-between items-center flex-wrap">
+            <div class="flex items-center space-x-2">
+                <img src="logo.png" alt="Public Notice Ads Logo" class="h-12 md:h-16 rounded">
+            </div>
+
+            <!-- Hamburger Icon for Mobile -->
+            <button id="navbar-toggle" class="md:hidden text-gray-700 text-2xl animated-button">
+                <i class="fas fa-bars"></i>
+            </button>
+
+            <!-- Navigation Links -->
+            <nav id="navbar-links" class="navbar-links w-full md:w-auto md:flex md:flex-grow md:justify-end md:items-center">
+                <ul class="flex flex-col md:flex-row md:items-center space-y-2 md:space-y-0 md:space-x-6 text-gray-700 mt-4 md:mt-0">
+                    <li><a href="#" class="hover:text-blue-600 font-medium animated-button">Home</a></li>
+                    <!-- Services Dropdown -->
+                    <li class="relative group">
+                        <a href="#" class="hover:text-blue-600 font-medium animated-button flex items-center justify-center md:justify-start">
+                            Services <i class="fas fa-chevron-down text-xs ml-1"></i>
+                        </a>
+                        <div class="dropdown-menu absolute hidden group-hover:block bg-gray-800 text-white rounded-md shadow-lg py-2 mt-2 min-w-[200px] z-10">
+                            <a href="#" class="block px-4 py-2 hover:bg-gray-700 animated-button">Lost And Found Ads</a>
+                            <a href="#" class="block px-4 py-2 hover:bg-gray-700 animated-button">Legal Notice Ad</a>
+                            <a href="#" class="block px-4 py-2 hover:bg-gray-700 animated-button">Tender Notice Ad</a>
+                            <a href="#" class="block px-4 py-2 hover:bg-gray-700 animated-button">Divorce Notice Ad</a>
+                            <a href="#" class="block px-4 py-2 hover:bg-gray-700 animated-button">Annual General Meeting ( AGM ) Notice Ad</a>
+                            <a href="#" class="block px-4 py-2 hover:bg-gray-700 animated-button">Change of Company Address Notice Ad</a>
+                            <a href="#" class="block px-4 py-2 hover:bg-gray-700 animated-button">Change of Name ads</a>
+                            <a href="#" class="block px-4 py-2 hover:bg-gray-700 animated-button">Public Notice Property Ad</a>
+                            <a href="#" class="block px-4 py-2 hover:bg-gray-700 animated-button">Loss Of Equity Shares Ad</a>
+                            <a href="#" class="block px-4 py-2 hover:bg-gray-700 animated-button">Loss of Share Certificate Ad</a>
+                            <a href="#" class="block px-4 py-2 hover:bg-gray-700 animated-button">Legal Notice Newspaper Ad</a>
+                            <a href="#" class="block px-4 py-2 hover:bg-gray-700 animated-button">Property Purchase Notice</a>
+                        </div>
+                    </li>
+                    
+                    <!-- Cities Dropdown -->
+                    <li class="relative group">
+                        <a href="#" class="hover:text-blue-600 font-medium animated-button flex items-center justify-center md:justify-start">
+                            Cities <i class="fas fa-chevron-down text-xs ml-1"></i>
+                        </a>
+                        <div class="dropdown-menu absolute hidden group-hover:block bg-gray-800 text-white rounded-md shadow-lg py-2 mt-2 min-w-[200px] z-10">
+                            <a href="#" class="block px-4 py-2 hover:bg-gray-700 animated-button">Mumbai</a>
+                            <a href="#" class="block px-4 py-2 hover:bg-gray-700 animated-button">Delhi</a>
+                            <a href="#" class="block px-4 py-2 hover:bg-gray-700 animated-button">Chennai</a>
+                            <a href="#" class="block px-4 py-2 hover:bg-gray-700 animated-button">Bangalore</a>
+                            <a href="#" class="block px-4 py-2 hover:bg-gray-700 animated-button">Kolkata</a>
+                        </div>
+                    </li>
+                    <li><a href="#" class="hover:text-blue-600 font-medium animated-button">Public Notice Format</a></li>
+                    <li><a href="#" class="hover:text-blue-600 font-medium animated-button">Our Clients</a></li>
+                    <li><a href="#" class="hover:text-blue-600 font-medium animated-button">Blog</a></li>
+                    
+                </ul>
+                <button class="outline-button mt-4 md:mt-0 md:ml-4 animated-button">Contact</button>
+            </nav>
+        </div>
+    </header>
+
+    <!-- Hero Section -->
+    <section class="bg-white py-16 text-gray-800">
+        <div class="container mx-auto px-4 flex flex-col lg:flex-row items-start justify-between gap-8">
+            <!-- Left Side: Text, Helpline, Image -->
+            <div class="lg:w-1/3 text-center lg:text-left mb-8 lg:mb-0">
+                <h1 class="text-3xl md:text-4xl font-extrabold leading-tight mb-4">Public Notice Classified Ads in Newspaper</h1>
+                <p class="text-lg md:text-xl mb-4">24x7 Helpline No.</p>
+                <div class="flex flex-col sm:flex-row justify-center lg:justify-start gap-4 mb-8">
+                    <a href="tel:+918657112011" class="green-button inline-block text-center whitespace-nowrap animated-button">8657112011</a>
+                    <a href="tel:+919699606000" class="green-button inline-block text-center whitespace-nowrap animated-button">9699606000</a>
+                </div>
+                <!-- Updated image for hero section -->
+                <img src="hero.png" alt="Public Notice Image" class="rounded-lg shadow-xl w-full max-w-sm mx-auto lg:mx-0">
+            </div>
+
+            <!-- Middle Section: Features List -->
+            <div class="lg:w-1/3 mb-8 lg:mb-0">
+                <ul class="space-y-3">
+                    <li class="bg-gray-100 p-3 rounded-md shadow-sm text-gray-700 font-medium hover:bg-gray-200 transition-colors duration-200 cursor-pointer animated-button">100% Satisfaction Guarantee</li>
+                    <li class="bg-gray-100 p-3 rounded-md shadow-sm text-gray-700 font-medium hover:bg-gray-200 transition-colors duration-200 cursor-pointer animated-button">Convenient Doorstep Service</li>
+                    <li class="bg-gray-100 p-3 rounded-md shadow-sm text-gray-700 font-medium hover:bg-gray-200 transition-colors duration-200 cursor-pointer animated-button">Legal Expertise</li>
+                    <li class="bg-gray-100 p-3 rounded-md shadow-sm text-gray-700 font-medium hover:bg-gray-200 transition-colors duration-200 cursor-pointer animated-button">Document Assistance</li>
+                    <li class="bg-gray-100 p-3 rounded-md shadow-sm text-gray-700 font-medium hover:bg-gray-200 transition-colors duration-200 cursor-pointer animated-button">Competitive Rates</li>
+                    <li class="bg-gray-100 p-3 rounded-md shadow-sm text-gray-700 font-medium hover:bg-gray-200 transition-colors duration-200 cursor-pointer animated-button">Easy Booking & Payment</li>
+                    <li class="bg-gray-100 p-3 rounded-md shadow-sm text-gray-700 font-medium hover:bg-gray-200 transition-colors duration-200 cursor-pointer animated-button">Optimal Newspaper Placement</li>
+                    <li class="bg-gray-100 p-3 rounded-md shadow-sm text-gray-700 font-medium hover:bg-gray-200 transition-colors duration-200 cursor-pointer animated-button">Free Ad Sample & Translation</li>
+                    <li class="bg-gray-100 p-3 rounded-md shadow-sm text-gray-700 font-medium hover:bg-gray-200 transition-colors duration-200 cursor-pointer animated-button">Home Delivery Of Newspaper Copies</li>
+                </ul>
+            </div>
+
+            <!-- Right Side: Contact Form -->
+            <div class="lg:w-1/3 flex justify-center w-full">
+                <div class="bg-white p-6 rounded-lg shadow-xl w-full max-w-md border border-gray-200">
+                    <h2 class="text-2xl font-bold text-gray-800 mb-4 text-center">We're Here to Help!</h2>
+                    <form>
+                        <div class="mb-4">
+                            <input type="text" placeholder="Your Name" class="w-full px-4 py-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500">
+                        </div>
+                        <div class="mb-4">
+                            <input type="email" placeholder="Your Email" class="w-full px-4 py-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500">
+                        </div>
+                        <div class="mb-4">
+                            <input type="tel" placeholder="Your Phone Number" class="w-full px-4 py-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500">
+                        </div>
+                        <div class="mb-6">
+                            <textarea placeholder="Message Here" rows="4" class="w-full px-4 py-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"></textarea>
+                        </div>
+                        <div class="flex items-center mb-6 justify-between">
+                            <label class="flex items-center">
+                                <input type="checkbox" class="form-checkbox h-4 w-4 text-blue-600 rounded">
+                                <span class="ml-2 text-gray-700 text-sm">I'm not a robot</span>
+                            </label>
+                            <img src="https://placehold.co/80x30/FFFFFF/CCCCCC?text=reCAPTCHA" alt="reCAPTCHA" class="h-8">
+                        </div>
+                        <button type="submit" class="w-full bg-green-500 hover:bg-green-600 text-white px-6 py-3 rounded-lg font-bold text-lg transition-colors duration-300 animated-button">SEND</button>
+                    </form>
+                    <p class="text-center text-gray-600 text-sm mt-4">Call Us :- <span class="font-semibold">+91 9821676000 / +91 8657112011</span></p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Blue Gradient Banner Section -->
+    <section class="gradient-blue text-white py-6">
+        <div class="container mx-auto px-4 flex flex-col md:flex-row items-center justify-between text-center md:text-left">
+            <p class="text-xl md:text-2xl font-semibold mb-4 md:mb-0 md:pr-8">Get the best rates for public and legal notice ads in Mumbai, Thane, Navi Mumbai, Kalyan-Dombivli, Mira-Bhayander, and Vasai-Virar.</p>
+            <button class="bg-green-500 hover:bg-green-600 text-white px-8 py-3 rounded-lg font-bold text-lg transition-colors duration-300 whitespace-nowrap animated-button">BOOK AD NOW</button>
+        </div>
+    </section>
+
+    <!-- New Section: Feature Cards -->
+    <section class="bg-white py-12">
+        <div class="container mx-auto px-4 flex flex-col md:flex-row justify-around items-start text-center md:text-left gap-8">
+            <div class="flex flex-col items-center md:items-start max-w-sm">
+                <img src="https://placehold.co/60x60/D1E0E6/000000?text=100%" alt="100% Satisfaction Guarantee Icon" class="rounded-full w-16 h-16 object-cover mb-4">
+                <h3 class="text-xl font-semibold mb-2">100% Satisfaction Guarantee</h3>
+                <p class="text-gray-600">We believe in delivering an exceptional experience for every client. From start to finish, we strive to make **public notice ad** booking as smooth as possible, ensuring your satisfaction in every step of the way.</p>
+            </div>
+            <div class="flex flex-col items-center md:items-start max-w-sm">
+                <img src="https://placehold.co/60x60/D1E0E6/000000?text=Home" alt="Convenient Doorstep Service Icon" class="rounded-full w-16 h-16 object-cover mb-4">
+                <h3 class="text-xl font-semibold mb-2">Convenient Doorstep Service</h3>
+                <p class="text-gray-600">No need to leave your home or office; our online platform allows you to handle everything digitally. With comprehensive support from our team, booking your **public notice ad** has never been easier or more convenient.</p>
+            </div>
+            <div class="flex flex-col items-center md:items-start max-w-sm">
+                <img src="https://placehold.co/60x60/D1E0E6/000000?text=Legal" alt="Legal Expertise Icon" class="rounded-full w-16 h-16 object-cover mb-4">
+                <h3 class="text-xl font-semibold mb-2">Legal Expertise</h3>
+                <p class="text-gray-600">Each **public notice ad** undergoes a meticulous review by our seasoned legal professionals, ensuring full compliance with local regulations and giving you peace of mind.</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Ad Categories Section -->
+    <section class="bg-gray-50 py-16">
+        <div class="container mx-auto px-4 text-center">
+            <h3 class="text-blue-600 text-sm font-semibold uppercase mb-2">SERVICES</h3>
+            <h2 class="text-3xl md:text-4xl font-bold text-gray-800 mb-10">Book Public Notice Ad In Newspaper</h2>
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                <div class="bg-white p-6 rounded-lg shadow-md text-left transform hover:scale-105 transition-transform duration-300">
+                    <div class="mb-4">
+                        <img src="https://placehold.co/40x40/E5E7EB/333333?text=🏠" alt="Property Purchase Notice Icon" class="w-10 h-10 p-2 rounded-full bg-gray-100 inline-block">
+                    </div>
+                    <h3 class="text-xl font-semibold text-gray-800 mb-2">Property Purchase Notice</h3>
+                    <p class="text-gray-600 text-sm">Buying property is an exciting but serious investment, and a Property Purchase Notice plays a crucial role in ensuring transparency.</p>
+                </div>
+                <div class="bg-white p-6 rounded-lg shadow-md text-left transform hover:scale-105 transition-transform duration-300">
+                    <div class="mb-4">
+                        <img src="https://placehold.co/40x40/E5E7EB/333333?text=⚖️" alt="Legal Notice Ads Icon" class="w-10 h-10 p-2 rounded-full bg-gray-100 inline-block">
+                    </div>
+                    <h3 class="text-xl font-semibold text-gray-800 mb-2">Legal Notice Ads</h3>
+                    <p class="text-gray-600 text-sm">When it comes to formal declarations and legal obligations, a Legal Notice Ad is often a requirement. Whether it's a business matter or personal announcement.</p>
+                </div>
+                <div class="bg-white p-6 rounded-lg shadow-md text-left transform hover:scale-105 transition-transform duration-300">
+                    <div class="mb-4">
+                        <img src="https://placehold.co/40x40/E5E7EB/333333?text=🔎" alt="Lost & Found Notice Icon" class="w-10 h-10 p-2 rounded-full bg-gray-100 inline-block">
+                    </div>
+                    <h3 class="text-xl font-semibold text-gray-800 mb-2">Lost & Found Notice</h3>
+                    <p class="text-gray-600 text-sm">Have you lost something valuable or important? Publishing a Lost & Found Notice is essential to inform the public and increase the chances of recovery.</p>
+                </div>
+                <div class="bg-white p-6 rounded-lg shadow-md text-left transform hover:scale-105 transition-transform duration-300">
+                    <div class="mb-4">
+                        <img src="https://placehold.co/40x40/E5E7EB/333333?text=🔄" alt="Change Of Name Ads Icon" class="w-10 h-10 p-2 rounded-full bg-gray-100 inline-block">
+                    </div>
+                    <h3 class="text-xl font-semibold text-gray-800 mb-2">Change Of Name Ads</h3>
+                    <p class="text-gray-600 text-sm">Changing your name? Whether it's due to marriage, personal preference, or other reasons, publishing a Change of Name Ad is an essential part of the legal process.</p>
+                </div>
+                <div class="bg-white p-6 rounded-lg shadow-md text-left transform hover:scale-105 transition-transform duration-300">
+                    <div class="mb-4">
+                        <img src="https://placehold.co/40x40/E5E7EB/333333?text=❤️‍🩹" alt="Divorce Notice Icon" class="w-10 h-10 p-2 rounded-full bg-gray-100 inline-block">
+                    </div>
+                    <h3 class="text-xl font-semibold text-gray-800 mb-2">Divorce Notice</h3>
+                    <p class="text-gray-600 text-sm">Undergoing a separation? Publishing a Divorce Notice can be an important part of your legal journey, offering transparency and clarity during a sensitive time.</p>
+                </div>
+                <div class="bg-white p-6 rounded-lg shadow-md text-left transform hover:scale-105 transition-transform duration-300">
+                    <div class="mb-4">
+                        <img src="https://placehold.co/40x40/E5E7EB/333333?text=🏛️" alt="Court Notice Icon" class="w-10 h-10 p-2 rounded-full bg-gray-100 inline-block">
+                    </div>
+                    <h3 class="text-xl font-semibold text-gray-800 mb-2">Court Notice</h3>
+                    <p class="text-gray-600 text-sm">If you're required to notify others of a legal proceeding or decision, a Court Notice can help fulfill this responsibility. These notices are essential to inform relevant parties</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Public Notice in Mumbai Section -->
+    <section class="bg-gray-100 py-16">
+        <div class="container mx-auto px-4 flex flex-col lg:flex-row items-center gap-8">
+            <div class="lg:w-1/2 flex justify-center">
+                <img src="hero2.png" alt="Public Notice Mumbai" class="rounded-lg shadow-xl w-full max-w-md md:max-w-lg">
+            </div>
+            <div class="lg:w-1/2 text-center lg:text-left">
+                <h2 class="text-3xl md:text-4xl font-bold text-gray-800 mb-6">Public Notice Classified Ads in Mumbai Newspaper</h2>
+                <p class="text-gray-700 text-lg leading-relaxed mb-6">
+                    If you want to book online property classified ads in Mumbai, Delhi, Chennai, Bangalore, Kolkata, Hyderabad, Ahmedabad, Pune, or any other city in India. Public Notice Ads provide a simple and user-friendly platform. Our dedicated customer support ensures a seamless ad booking experience.
+                </p>
+                <button class="bg-blue-600 hover:bg-blue-700 text-white px-6 py-3 rounded-lg font-bold text-lg transition-colors duration-300 animated-button">VIEW MORE</button>
+            </div>
+        </div>
+    </section>
+
+    <!-- What People Say Section -->
+    <section class="bg-white py-16">
+        <div class="container mx-auto px-4 text-center">
+            <h2 class="text-3xl md:text-4xl font-bold text-gray-800 mb-12">What People Say</h2>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                <div class="bg-white p-6 rounded-lg shadow-md flex items-start text-left transform hover:scale-105 transition-transform duration-300">
+                    <img src="https://placehold.co/80x80/0A4F9A/FFFFFF?text=VS" alt="Vikram Singh" class="rounded-full w-20 h-20 object-cover mr-4 flex-shrink-0">
+                    <div>
+                        <h3 class="text-xl font-semibold text-gray-800 mb-2">Vikram Singh</h3>
+                        <p class="text-gray-600">"The property transfer notice service was straightforward and hassle-free. Public Notice Ads handled everything expertly. Kudos to Dinesh!"</p>
+                    </div>
+                </div>
+                <div class="bg-white p-6 rounded-lg shadow-md flex items-start text-left transform hover:scale-105 transition-transform duration-300">
+                    <img src="https://placehold.co/80x80/0A4F9A/FFFFFF?text=PV" alt="Priya Verma" class="rounded-full w-20 h-20 object-cover mr-4 flex-shrink-0">
+                    <div>
+                        <h3 class="text-xl font-semibold text-gray-800 mb-2">Priya Verma</h3>
+                        <p class="text-gray-600">"Their legal notice ads service ensured my notices were compliant with all legal requirements. A reliable and professional service."</p>
+                    </div>
+                </div>
+            </div>
+            <button class="mt-12 outline-button px-8 py-3 font-bold text-lg animated-button">View All</button>
+        </div>
+    </section>
+
+    <!-- Latest Blog Posts Section -->
+    <section class="bg-gray-100 py-16">
+        <div class="container mx-auto px-4 text-center">
+            <h2 class="text-3xl md:text-4xl font-bold text-gray-800 mb-12">Latest Blog Posts</h2>
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+                <div class="bg-white rounded-lg shadow-md overflow-hidden transform hover:scale-105 transition-transform duration-300">
+                    <img src="blog1.png" alt="Blog Post 1" class="w-full h-48 object-cover">
+                    <div class="p-6 text-center">
+                        <h3 class="text-xl font-semibold text-gray-800">Private Company Notice</h3>
+                    </div>
+                </div>
+                <div class="bg-white rounded-lg shadow-md overflow-hidden transform hover:scale-105 transition-transform duration-300">
+                    <img src="blog2.png" alt="Blog Post 2" class="w-full h-48 object-cover">
+                    <div class="p-6 text-center">
+                        <h3 class="text-xl font-semibold text-gray-800">Public Notice Format for Property</h3>
+                    </div>
+                </div>
+                <div class="bg-white rounded-lg shadow-md overflow-hidden transform hover:scale-105 transition-transform duration-300">
+                    <img src="blog3.png" alt="Blog Post 3" class="w-full h-48 object-cover">
+                    <div class="p-6 text-center">
+                        <h3 class="text-xl font-semibold text-gray-800">Lost and Found Advertisement</h3>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Call to Action Section -->
+    <section class="gradient-blue py-12 text-white text-center">
+        <div class="container mx-auto px-4">
+            <h2 class="text-3xl md:text-4xl font-bold mb-4">Fast, easy, and affordable public notice publishing - start today!</h2>
+            <button class="bg-red-500 hover:bg-red-600 text-white px-8 py-3 rounded-lg font-bold text-lg transition-colors duration-300 animated-button">GET STARTED</button>
+        </div>
+    </section>
+
+    <!-- Footer Section -->
+    <footer class="gradient-dark-blue py-12 text-white">
+        <div class="container mx-auto px-4 grid grid-cols-1 md:grid-cols-3 lg:grid-cols-4 gap-8">
+            <!-- Quick Links -->
+            <div>
+                <h3 class="text-xl font-bold mb-4">Quick Links</h3>
+                <ul>
+                    <li class="mb-2"><a href="#" class="hover:underline">Home</a></li>
+                    <li class="mb-2"><a href="#" class="hover:underline">Services</a></li>
+                    <li class="mb-2"><a href="#" class="hover:underline">Blogs</a></li>
+                    <li class="mb-2"><a href="#" class="hover:underline">Contact Us</a></li>
+                </ul>
+            </div>
+
+            <!-- Our Office -->
+            <div>
+                <h3 class="text-xl font-bold mb-4">Our Office</h3>
+                <p class="mb-2">Public Notice Ads</p>
+                <p class="mb-2">123, Example Street,</p>
+                <p class="mb-2">Mumbai, Maharashtra, India</p>
+                <p class="mb-2">Pin - 400001</p>
+                <p class="mb-2">Email: info@publicnoticeads.in</p>
+                <p class="mb-2">Phone: +91 98765 43210</p>
+            </div>
+
+            <!-- Get Notice Ads -->
+            <div>
+                <h3 class="text-xl font-bold mb-4">Get Notice Ads</h3>
+                <ul class="grid grid-cols-2 gap-2">
+                    <li><a href="#" class="hover:underline">Property Notice</a></li>
+                    <li><a href="#" class="hover:underline">Legal Notice</a></li>
+                    <li><a href="#" class="hover:underline">Lost & Found Notice</a></li>
+                    <li><a href="#" class="hover:underline">Change of Name</a></li>
+                    <li><a href="#" class="hover:underline">Divorce Notice</a></li>
+                    <li><a href="#" class="hover:underline">Court Notice</a></li>
+                </ul>
+            </div>
+
+            <!-- Subscription/Social Media -->
+            <div>
+                <h3 class="text-xl font-bold mb-4">Stay Connected</h3>
+                <p class="mb-4">Subscribe to our newsletter for updates!</p>
+                <div class="flex space-x-4 mb-6">
+                    <a href="#" class="text-white hover:text-blue-300 text-2xl"><i class="fab fa-facebook-f"></i></a>
+                    <a href="#" class="text-white hover:text-blue-300 text-2xl"><i class="fab fa-twitter"></i></a>
+                    <a href="#" class="text-white hover:text-blue-300 text-2xl"><i class="fab fa-linkedin-in"></i></a>
+                    <a href="#" class="text-white hover:text-blue-300 text-2xl"><i class="fab fa-instagram"></i></a>
+                </div>
+                <img src="footer.png" alt="App Download" class="rounded-lg w-48">
+            </div>
+        </div>
+        <div class="container mx-auto px-4 text-center mt-8 pt-8 border-t border-gray-700">
+            <p>&copy; 2025 Public NoticeAds. All rights reserved.</p>
+        </div>
+    </footer>
+
+    <!-- WhatsApp Floating Button -->
+    <a href="https://wa.me/918657112011" target="_blank" class="whatsapp-button">
+        <i class="fab fa-whatsapp"></i>
+    </a>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const navbarToggle = document.getElementById('navbar-toggle');
+            const navbarLinks = document.getElementById('navbar-links');
+
+            if (navbarToggle && navbarLinks) {
+                navbarToggle.addEventListener('click', function() {
+                    navbarLinks.classList.toggle('active');
+                });
+            }
+        });
+    </script>
+</body>
+</html>
+s
